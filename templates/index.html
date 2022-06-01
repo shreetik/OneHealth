@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='CSS/style.css') }}"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <div class="nav">
+          <div class="heading">
+            <a href="#"
+              ><p>One<span id="health">health</span></p></a
+            >
+          </div>
+          <div class="subheading">
+            <a href="#about"><p>About</p></a>
+            <p>Service</p>
+            <p>Login</p>
+            <p>Signup</p>
+          </div>
+        </div>
+        <div class="homecontent">
+          <div class="homebox">
+            <div class="caption">
+              <div class="caphold">
+                <p>Your health</p>
+                <p>is our priority.</p>
+              </div>
+              <div class="btnhold">
+                <div class="btninsid">
+                  <input id="btn" type="button" value="GET STARTED" />
+                </div>
+              </div>
+            </div>
+            <div class="homeimg">
+              <img
+                src="{{ url_for('static',filename='indeximg.jpg') }}"
+                alt=""
+                id="indimg"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- About -->
+
+    <section id="about">
+      <div class="container">
+        <div class="box">
+          <div class="">
+            <h2>About</h2>
+          </div>
+          <div class="homecontent">
+            <div class="homebox">
+              <div class="caption">
+                <div class="caphold">
+                  <p>Your health</p>
+                  <p>is our priority.</p>
+                </div>
+                <div class="btnhold">
+                  <div class="btninsid">
+                    <input id="btn" type="button" value="GET STARTED" />
+                  </div>
+                </div>
+              </div>
+              <div class="homeimg">
+                <img
+                  src="{{ url_for('static',filename='about.jpg') }}"
+                  alt=""
+                  id="indimg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
