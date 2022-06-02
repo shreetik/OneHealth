@@ -8,7 +8,7 @@
       rel="stylesheet"
       href="{{ url_for('static',filename='CSS/style.css') }}"
     />
-    <title>Document</title>
+    <title>Onehealth</title>
   </head>
   <body>
     <div class="container">
@@ -22,8 +22,8 @@
           <div class="subheading">
             <a href="#about"><p>About</p></a>
             <p>Service</p>
-            <p>Login</p>
-            <p>Signup</p>
+            <a href="/login"><p>Login</p></a>
+            <a href="/signup"><p>Signup</p></a>
           </div>
         </div>
         <div class="homecontent">
@@ -34,9 +34,11 @@
                 <p>is our priority.</p>
               </div>
               <div class="btnhold">
-                <div class="btninsid">
-                  <input id="btn" type="button" value="GET STARTED" />
-                </div>
+                <a href="/login">
+                  <div class="btninsid">
+                    <input id="btn" type="button" value="GET STARTED" />
+                  </div>
+                </a>
               </div>
             </div>
             <div class="homeimg">
