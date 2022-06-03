@@ -1,7 +1,12 @@
 from distutils.log import debug
 from flask import Flask, render_template
+from flask_recaptcha import ReCaptcha
 
 app = Flask(__name__)
+app.config['RECAPTCHA_SITE_KEY'] = '6LdQ4DwgAAAAAACoU2jSbZUSR4Fvi6CySiJ75BFx'
+app.config['RECAPTCHA_SECRET_KEY'] = '6LdQ4DwgAAAAAFxykuQHImTwFb8fcpPLLwSpe8O4'
+
+recaptcha = ReCaptcha(app)
 
 
 @app.route('/')
@@ -21,3 +26,8 @@ def login():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+#
+
+#

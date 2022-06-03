@@ -36,7 +36,8 @@ justify-content: center;
 }
 .loginhold{
     /* background-color: #9b59b6; */
-    width: 22rem;
+    /* width: 22rem;  22 */
+    width: 19rem;
     height: 26rem;
 }
 .container .title{
