@@ -24,6 +24,11 @@ def login():
     return render_template('login.html')
 
 
+@ app.route('/user')
+def userpanel():
+    return render_template('userdashboard.html')
+
+
 if __name__ == "__main__":
     app.run(debug=True)
 

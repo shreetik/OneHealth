@@ -1,0 +1,91 @@
+.nav{
+    justify-content: space-between;
+}
+
+.bodyhold{
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(84, 175, 143);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sidebar{
+    background-color: #4862C3;
+    width: 18%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 5rem;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sidehold{
+    /* background-color: chocolate; */
+    width: 100%;
+    height: 32rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+
+}
+.containthold{
+    background-color: #EDEDED;
+    height: 100vh;
+    width: 82%;
+}
+
+.optionhold{
+    /* background-color: cyan; */
+    width:100%;
+    height: 3.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    overflow: hidden;
+    cursor: pointer;
+}
+.optionhold:hover{
+    border-left: 4px solid deepskyblue;
+}
+.optionhold:hover > .option{
+    background-color: #EDEDED;
+    color: #4862C3;  
+   
+}
+
+.optionhold:hover > .icon{
+    background-color: #EDEDED;
+    color: #4862C3;  
+}
+
+.optionhold:hover > .icon i{
+    color: #4862C3;  
+}
+.icon{
+    width: 20%;
+    height: 100%;
+    /* background-color: blue; */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 1.6rem;
+}
+.option{
+    width: 80%;
+    height: 100%;
+    /* background-color: rgb(33, 33, 40); */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1.3rem;
+    padding-top: 6px;
+    color: #fafafa;
+}
+i{
+    font-size: 25px;
+    color: #fafafa;
+}
