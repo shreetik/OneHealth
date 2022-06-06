@@ -18,6 +18,8 @@
       rel="stylesheet"
       href="{{ url_for('static',filename='CSS/signup_style.css') }}"
     />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>signup</title>
   </head>
   <body>
@@ -38,57 +40,78 @@
           <div class="signuphold">
             <div class="title">Registration</div>
             <div class="content">
-              <form action="#">
+              <form id="signupform" action="/createuser" method="post">
                 <div class="user-details">
                   <div class="input-box">
                     <span class="details">Full Name</span>
-                    <input type="text" placeholder="Enter your name" required />
+                    <input
+                      type="text"
+                      placeholder="Enter your name"
+                      name="fname"
+                      id="fnam"
+                      required
+                    />
+                    <span class="warning-msg" id="fname"></span>
                   </div>
                   <div class="input-box">
                     <span class="details">Username</span>
                     <input
                       type="text"
                       placeholder="Enter your username"
+                      name="uname"
+                      id="form_unam"
                       required
                     />
+                    <span class="warning-msg" id="uname"></span>
                   </div>
                   <div class="input-box">
                     <span class="details">Email</span>
                     <input
                       type="email"
                       placeholder="Enter your email"
+                      name="email"
+                      id="form_email"
                       required
                     />
+                    <span class="warning-msg" id="email"></span>
                   </div>
                   <div class="input-box">
                     <span class="details">Phone Number</span>
                     <input
                       type="text"
                       placeholder="Enter your number"
+                      name="phone"
+                      id="form_phone"
                       required
                     />
+                    <span class="warning-msg" id="pno"></span>
                   </div>
                   <div class="input-box">
                     <span class="details">Password</span>
                     <input
                       type="password"
                       placeholder="Enter your password"
+                      name="password"
+                      id="form_password"
                       required
                     />
+                    <span class="warning-msg" id="pwd"></span>
                   </div>
                   <div class="input-box">
                     <span class="details">Confirm Password</span>
                     <input
-                      type="password"
+                      type="text"
                       placeholder="Confirm your password"
+                      id="form_cpassword"
                       required
                     />
+                    <span class="warning-msg" id="cpwd"></span>
                   </div>
                 </div>
                 <div class="gender-details">
-                  <input type="radio" name="gender" id="dot-1" />
-                  <input type="radio" name="gender" id="dot-2" />
-                  <input type="radio" name="gender" id="dot-3" />
+                  <input type="radio" name="gender" value="Male" id="dot-1" />
+                  <input type="radio" name="gender" value="Female" id="dot-2" />
+                  <input type="radio" name="gender" value="NA" id="dot-3" />
                   <span class="gender-title">Gender</span>
                   <div class="category">
                     <label for="dot-1">
@@ -104,17 +127,38 @@
                       <span class="gender">Prefer not to say</span>
                     </label>
                   </div>
+                  <span class="warning-msg" id="gender"></span>
                 </div>
                 <div class="button">
-                  <input type="submit" value="Register" />
+                  <input type="submit" value="Register" id="fromsubmit" />
                 </div>
               </form>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
+      <div>
+        <!-- Begin alerts -->
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <script>
+          Swal.fire({
+            title: "{{ category.title() }}!",
+            // success , error , warning ,info
+
+            text: "{{ message }}",
+            // Custom message flashed from your flask routes
+
+            icon: "{{ category }}" == "danger" ? "error" : "{{ category }}",
+            // success , error , warning ,info
+          });
+        </script>
+        {% endfor %} {% endif %} {% endwith %}
+
+        <!-- End alerts -->
+      </div>
+    </div>
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -125,5 +169,128 @@
       integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#fname").hide();
+        $("#uname").hide();
+        $("#email").hide();
+        $("#pno").hide();
+        $("#pwd").hide();
+        $("#cwd").hide();
+        $("#gender").hide();
+
+        var error_fname = false;
+        var error_uname = false;
+        var error_email = false;
+        var error_phone = false;
+        var error_password = false;
+        var error_retype_password = false;
+        var error_gender = false;
+
+        $("#fnam").focusout(function () {
+          var pattern = /^[a-zA-Z\s]*$/;
+          var fname = $("#fnam").val();
+          if (pattern.test(fname)) {
+            $("#fname").hide();
+          } else if (fname !== "") {
+            $("#fname").html("Full Name is required");
+            $("#fname").show();
+            error_fname = true;
+          } else {
+            $("#fname").html("Should contain only Characters");
+            $("#fname").show();
+            error_fname = true;
+          }
+        });
+
+        $("#form_unam").focusout(function () {
+          var pattern = /^[a-zA-Z]*$/;
+          var uname = $("#form_unam").val();
+          if (pattern.test(uname) && uname !== "") {
+            $("#uname").hide();
+          } else {
+            $("#uname").html("Should contain only Characters");
+            $("#uname").show();
+            error_uname = true;
+          }
+        });
+
+        $("#form_email").focusout(function () {
+          var pattern = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+          var email = $("#form_email").val();
+          if (pattern.test(email) && email !== "") {
+            $("#email").hide();
+          } else {
+            $("#email").html("Invalid Email");
+            $("#email").show();
+            error_email = true;
+          }
+        });
+        $("#form_phone").focusout(function () {
+          var pattern = /^[0-9]*$/;
+          var phone_length = $("#form_phone").val().length;
+          var phone = $("#form_phone").val();
+          if (pattern.test(phone) && phone_length >= 10 && phone_length < 13) {
+            $("#pno").hide();
+          } else {
+            $("#pno").html("Invalid Phone No.");
+            $("#pno").show();
+            error_password = true;
+          }
+        });
+        $("#form_password").focusout(function () {
+          var password_length = $("#form_password").val().length;
+          if (password_length < 8) {
+            $("#pwd").html("Atleast 8 Characters");
+            $("#pwd").show();
+            error_password = true;
+          } else {
+            $("#pwd").hide();
+          }
+        });
+
+        $("#form_cpassword").focusout(function () {
+          var password = $("#form_password").val();
+          var retype_password = $("#form_cpassword").val();
+          if (password !== retype_password) {
+            $("#cpwd").html("Passwords Did not Matched");
+            $("#cpwd").show();
+            error_retype_password = true;
+          } else {
+            $("#cpwd").hide();
+          }
+        });
+
+        $("#signupform").submit(function (event) {
+          var male = $("#dot-1").val();
+          var female = $("#dot-2").val();
+          var na = $("#dot-3").val();
+          console.log(male);
+          if (
+            error_fname === false &&
+            error_uname === false &&
+            error_email === false &&
+            error_phone === false &&
+            error_password === false &&
+            error_retype_password === false
+          ) {
+            return true;
+          } else {
+            event.preventDefault();
+            Swal.fire({
+              title: "Warning!",
+              // success , error , warning ,info
+
+              text: "Please Fill the Form Correctly",
+              // Custom message flashed from your flask routes
+
+              icon: "warning",
+              // success , error , warning ,info
+            });
+          }
+        });
+      });
+    </script>
   </body>
 </html>

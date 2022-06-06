@@ -65,6 +65,7 @@
 .optionhold:hover > .icon i{
     color: #4862C3;  
 }
+
 .icon{
     width: 20%;
     height: 100%;
@@ -81,7 +82,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     padding-top: 6px;
     color: #fafafa;
 }

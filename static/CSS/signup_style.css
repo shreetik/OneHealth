@@ -6,16 +6,18 @@
     height: 100vh;
     display: flex;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
 }
 
 .signuphold{
     width: 53rem;
-    height: 37rem;
+    height: 37rem auto;
     background-color: white;
     padding: 3rem;
     border-radius: 1rem;
     box-shadow: -2px -2px 36px -9px rgba(0,0,0,0.75);
+    overflow: hidden;
 }
 
 .container .title{
@@ -63,6 +65,7 @@ form .input-box span.details{
 .user-details .input-box input:valid{
   border-color: #9b59b6;
 }
+
  form .gender-details .gender-title{
   font-size: 20px;
   font-weight: 500;
@@ -141,5 +144,9 @@ form .user-details .input-box{
     flex-direction: column;
   }
 }
-
+.warning-msg{
+  font-size: 13px;
+  color: red;
+  font-style: italic;
+}
 
