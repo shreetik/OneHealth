@@ -37,7 +37,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    overflow: hidden;
+    /* overflow: hidden; */
     box-shadow: 0 -18px 34px 8px rgb(0 0 0 / 34%);
     position: fixed;
 }

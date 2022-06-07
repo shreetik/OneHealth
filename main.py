@@ -39,6 +39,16 @@ def login():
     return render_template('login.html')
 
 
+@ app.route('/doctorLogin')
+def doctorlogin():
+    return render_template('doctor_login.html')
+
+
+@ app.route('/adminLogin')
+def adminlogin():
+    return render_template('admin_login.html')
+
+
 @ app.route('/user')
 def userpanel():
     if 'user_name' in session:
