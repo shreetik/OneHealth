@@ -191,12 +191,9 @@
         $("#fnam").focusout(function () {
           var pattern = /^[a-zA-Z\s]*$/;
           var fname = $("#fnam").val();
-          if (pattern.test(fname)) {
+          if (pattern.test(fname) && fname !== "") {
             $("#fname").hide();
-          } else if (fname !== "") {
-            $("#fname").html("Full Name is required");
-            $("#fname").show();
-            error_fname = true;
+            error_fname = false;
           } else {
             $("#fname").html("Should contain only Characters");
             $("#fname").show();
@@ -209,6 +206,7 @@
           var uname = $("#form_unam").val();
           if (pattern.test(uname) && uname !== "") {
             $("#uname").hide();
+            error_uname = false;
           } else {
             $("#uname").html("Should contain only Characters");
             $("#uname").show();
@@ -221,6 +219,7 @@
           var email = $("#form_email").val();
           if (pattern.test(email) && email !== "") {
             $("#email").hide();
+            error_email = false;
           } else {
             $("#email").html("Invalid Email");
             $("#email").show();
@@ -233,10 +232,11 @@
           var phone = $("#form_phone").val();
           if (pattern.test(phone) && phone_length >= 10 && phone_length < 13) {
             $("#pno").hide();
+            error_phone = false;
           } else {
             $("#pno").html("Invalid Phone No.");
             $("#pno").show();
-            error_password = true;
+            error_phone = true;
           }
         });
         $("#form_password").focusout(function () {
@@ -247,6 +247,7 @@
             error_password = true;
           } else {
             $("#pwd").hide();
+            error_password = false;
           }
         });
 
@@ -259,14 +260,11 @@
             error_retype_password = true;
           } else {
             $("#cpwd").hide();
+            error_retype_password = false;
           }
         });
 
         $("#signupform").submit(function (event) {
-          var male = $("#dot-1").val();
-          var female = $("#dot-2").val();
-          var na = $("#dot-3").val();
-          console.log(male);
           if (
             error_fname === false &&
             error_uname === false &&

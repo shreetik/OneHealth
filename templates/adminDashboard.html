@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='CSS/style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='CSS/user_style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='CSS/admin_dash_style.css') }}"
+    />
+
+    <style>
+      .containthold {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      .card {
+        width: 80%;
+        height: 80%;
+
+        display: flex;
+      }
+      .boxhold {
+        width: 20rem;
+        height: 10rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-direction: column;
+        margin: 2rem;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 35rem;
+        -webkit-box-shadow: 8px 14px 105px -41px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 8px 14px 105px -41px rgba(0, 0, 0, 0.75);
+        box-shadow: 8px 14px 105px -41px rgba(0, 0, 0, 0.75);
+        color: aliceblue;
+      }
+      .head {
+        font-size: 1.3rem;
+      }
+      .count {
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      #c1 {
+        background-color: #20a8da;
+        border-left: 4px solid #037097;
+      }
+      #c2 {
+        background-color: #63c2de;
+        border-left: 4px solid #3c859c;
+      }
+      #c3 {
+        background-color: #f96d6c;
+        border-left: 4px solid #b34b4b;
+      }
+
+      .actoptionhold {
+        border-left: 4px solid deepskyblue;
+      }
+      .actoption {
+        background-color: white;
+        color: #4862c3;
+      }
+
+      .acticon {
+        background-color: white;
+        color: #4862c3;
+      }
+
+      .acti {
+        color: #4862c3;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Admin</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <div class="nav">
+          <div class="heading">
+            <a href="#"
+              ><p>One<span id="health">health</span></p></a
+            >
+          </div>
+          <div class="subheading">
+            <h4>{{ name }}</h4>
+            <a href="/logout"><p>Logout</p></a>
+          </div>
+        </div>
+
+        <div class="bodyhold">
+          <div class="sidebar">
+            <div class="sidehold">
+              <div class="optionhold actoptionhold">
+                <div class="icon acticon">
+                  <i class="fa-solid fa-house-user acti"></i>
+                </div>
+                <p class="option actoption"><a href="/adminhome">Home</a></p>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-disease"></i></div>
+                <p class="option"><a href="/add_doctor">Add Doctor</a></p>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="option"><a href="/view_doctor">view Doctor</a></div>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon">
+                  <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div class="option">
+                  <a href="/view_patient">View Patient</a>
+                </div>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-shield-virus"></i></div>
+                <div class="option">appointment</div>
+              </div>
+            </div>
+          </div>
+          <div class="containthold">
+            <div class="card">
+              <div class="boxhold" id="c1">
+                <div class="head">Total Patient</div>
+                <div class="count">{{ ucount }}</div>
+              </div>
+              <div class="boxhold" id="c2">
+                <div class="head">Total Doctors</div>
+                <div class="count">{{ dcount }}</div>
+              </div>
+              <div class="boxhold" id="c3">
+                <div class="head">Total Appointments</div>
+                <div class="count">15</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

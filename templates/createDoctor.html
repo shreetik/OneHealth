@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='CSS/style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='CSS/user_style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='CSS/signup_style.css') }}"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+      .containthold {
+        display: flex;
+        align-items: center;
+        justify-content:center;
+        flex-direction: column;
+      }
+      .boxhold {
+        width: 20rem;
+        height: 10rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-direction: column;
+        margin: 2rem;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 35rem;
+        -webkit-box-shadow: 8px 14px 105px -41px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 8px 14px 105px -41px rgba(0, 0, 0, 0.75);
+        box-shadow: 8px 14px 105px -41px rgba(0, 0, 0, 0.75);
+        color: aliceblue;
+      }
+      .head {
+        font-size: 1.3rem;
+      }
+      .count {
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      #c1 {
+        background-color: #20a8da;
+        border-left: 4px solid #037097;
+      }
+      #c2 {
+        background-color: #63c2de;
+        border-left: 4px solid #3c859c;
+      }
+      #c3 {
+        background-color: #f96d6c;
+        border-left: 4px solid #b34b4b;
+      }
+
+      .actoptionhold {
+        border-left: 4px solid deepskyblue;
+      }
+      .actoption {
+        background-color: white;
+        color: #4862c3;
+      }
+
+      .acticon {
+        background-color: white;
+        color: #4862c3;
+      }
+
+      .acti {
+        color: #4862c3;
+      }
+      .signuph {
+        width: 67rem;
+      }
+
+      input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+input[type=submit] {
+  background-color: #0457aa;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #217fde;
+}
+form{
+  width: 55rem;
+}
+h3{
+  color: #0457aa;
+  font-size: 2rem;
+}
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Admin</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <div class="nav">
+          <div class="heading">
+            <a href="#"
+              ><p>One<span id="health">health</span></p></a
+            >
+          </div>
+          <div class="subheading">
+            <h4>{{ name }}</h4>
+            <a href="/logout"><p>Logout</p></a>
+          </div>
+        </div>
+
+        <div class="bodyhold">
+          <div class="sidebar">
+            <div class="sidehold">
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-house-user"></i></div>
+                <p class="option"><a href="/adminhome">Home</a></p>
+              </div>
+
+              <div class="optionhold actoptionhold">
+                <div class="icon acticon">
+                  <i class="fa-solid fa-disease acti"></i>
+                </div>
+                <p class="option actoption"><a href="/add_doctor">Add Doctor</a></p>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="option"><a href="/view_doctor">view Doctor</a></div>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon">
+                  <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div class="option"><a href="/view_patient">View Patient</a></div>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-shield-virus"></i></div>
+                <div class="option">appointment</div>
+              </div>
+            </div>
+          </div>
+          <div class="containthold">
+            <h3>Add Doctor</h3>
+            <form action="/create_doctor" method="post">
+              <label for="fname">Doctor Name</label>
+              <input type="text" id="fname" name="dname" placeholder="Doctor name.." required>
+          
+              <label for="lname">Email Address</label>
+              <input type="text" id="lname" name="txtemail" placeholder="Email address" required>
+
+              <label for="lname">Contact Number</label>
+              <input type="text" id="lname" name="txtno" placeholder="Contact number" required>
+
+              <label for="country">Doctor Specalization</label>
+              <select id="country" name="selectspec" required>
+                <option value="NA">Specalization</option>
+                <option value="Cardiologists">Cardiologists</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="Internal Medicine">Internal Medicine</option>
+                <option value="Gynecology">Gynecology</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Radiology">Radiology</option>
+                <option value="Ophthalmology">Ophthalmology</option>
+              </select>
+
+              <label for="lname">Consultancy fee</label>
+              <input type="text" id="lname" name="txtfee" placeholder="Consultancy fee">
+
+              <label for="subject">Password</label>
+              <input type="text" id="lname" name="txtpass" placeholder="Password" required>
+          
+              <input type="submit" value="Add Doctor">
+            </form>
+          </div>
+          
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <!-- Begin alerts -->
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <script>
+          Swal.fire({
+            title: "{{ category.title() }}!",
+            // success , error , warning ,info
+
+            text: "{{ message }}",
+            // Custom message flashed from your flask routes
+
+            icon: "{{ category }}" == "danger" ? "error" : "{{ category }}",
+            // success , error , warning ,info
+          });
+        </script>
+        {% endfor %} {% endif %} {% endwith %}
+
+        <!-- End alerts -->
+      </div>
+
+    </div>
+  </body>
+</html>

@@ -1,18 +1,19 @@
 .nav{
     justify-content: space-between;
+    margin-bottom: 2rem;
 }
 
 .bodyhold{
     width: 100vw;
     height: 100vh;
-    background-color: rgb(84, 175, 143);
+    /* background-color: rgb(84, 175, 143); */
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 .sidebar{
     background-color: #4862C3;
-    width: 18%;
+    width: 15%;
     height: 100vh;
     display: flex;
     align-items: center;
@@ -33,9 +34,10 @@
 
 }
 .containthold{
-    background-color: #EDEDED;
+    
     height: 100vh;
     width: 82%;
+    overflow: hidden;
 }
 
 .optionhold{
@@ -45,6 +47,7 @@
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+   
     overflow: hidden;
     cursor: pointer;
 }
