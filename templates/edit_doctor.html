@@ -127,6 +127,13 @@ h3{
   color: #0457aa;
   font-size: 2rem;
 }
+
+.icouser {
+        height: 10px;
+        width: 10px;
+        color: black;
+        margin-right: 25px;
+      }
     </style>
 
     <link
@@ -148,8 +155,10 @@ h3{
             >
           </div>
           <div class="subheading">
-            <h4>{{ name }}</h4>
-            <a href="/logout"><p>Logout</p></a>
+            <h4><i class="fa-solid fa-user icouser"></i>{{ name }}</h4>
+            <a href="/logout"
+              ><i class="fa-solid fa-arrow-right-from-bracket icouser"></i
+            ></a>
           </div>
         </div>
 
