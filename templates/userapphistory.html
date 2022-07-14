@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='CSS/style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='CSS/user_style.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>booking</title>
+    <style>
+      .containthold {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .boxhold {
+        width: 20rem;
+        height: 10rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-direction: column;
+        margin: 2rem;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 35rem;
+        -webkit-box-shadow: 8px 14px 105px -41px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: 8px 14px 105px -41px rgba(0, 0, 0, 0.75);
+        box-shadow: 8px 14px 105px -41px rgba(0, 0, 0, 0.75);
+        color: aliceblue;
+      }
+      .head {
+        font-size: 1.3rem;
+      }
+      .count {
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      #c1 {
+        background-color: #20a8da;
+        border-left: 4px solid #037097;
+      }
+      #c2 {
+        background-color: #63c2de;
+        border-left: 4px solid #3c859c;
+      }
+      #c3 {
+        background-color: #f96d6c;
+        border-left: 4px solid #b34b4b;
+      }
+
+      .actoptionhold {
+        border-left: 4px solid deepskyblue;
+      }
+      .actoption {
+        background-color: white;
+        color: #4862c3;
+      }
+
+      .acticon {
+        background-color: white;
+        color: #4862c3;
+      }
+
+      .acti {
+        color: #4862c3;
+      }
+      .signuph {
+        width: 67rem;
+      }
+
+      input[type="text"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize: vertical;
+      }
+
+      input[type="button"] {
+        background-color: #dc3545;
+        color: white;
+        padding: ;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 16px;
+        width: 9rem;
+        height: 2.8rem;
+      }
+
+      input[type="button"]:hover {
+        background-color: #ed4c5c;
+      }
+      form {
+        width: 55rem;
+      }
+      h3 {
+        color: #04aa6d;
+        font-size: 2rem;
+      }
+      #customers {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      #customers td,
+      #customers th {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      #customers td {
+        padding-left: 10px;
+      }
+      #customers tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      #customers tr:hover {
+        background-color: #ddd;
+      }
+
+      #customers th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #2980d8;
+        color: white;
+      }
+      .tblhold {
+        width: 90%;
+        height: 70%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
+      }
+      .icn {
+        color: #62ddbd;
+        cursor: pointer;
+        margin-right: 7px;
+      }
+      .icn:hover {
+        color: #35bb98;
+      }
+      .icn2 {
+        color: #fc8370;
+        cursor: pointer;
+      }
+      .icn2:hover {
+        color: #e85638;
+      }
+      input {
+        font-family: "Roboto", sans-serif;
+        display: block;
+        border: none;
+        border-radius: 0.25rem;
+        border: 1px solid transparent;
+        line-height: 1.5rem;
+        padding: 0;
+        font-size: 1rem;
+        color: #607d8b;
+        width: 70%;
+        margin-top: 0.5rem;
+      }
+      input:focus {
+        outline: none;
+      }
+      #ui-datepicker-div {
+        display: none;
+        background-color: #fff;
+        box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+        margin-top: 0.25rem;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+      }
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+      .ui-datepicker-calendar thead th {
+        padding: 0.25rem 0;
+        text-align: center;
+        font-size: 0.75rem;
+        font-weight: 400;
+        color: #78909c;
+      }
+      .ui-datepicker-calendar tbody td {
+        width: 2.5rem;
+        text-align: center;
+        padding: 0;
+      }
+      .ui-datepicker-calendar tbody td a {
+        display: block;
+        border-radius: 0.25rem;
+        line-height: 2rem;
+        transition: 0.3s all;
+        color: #546e7a;
+        font-size: 0.875rem;
+        text-decoration: none;
+      }
+      .ui-datepicker-calendar tbody td a:hover {
+        background-color: #e0f2f1;
+      }
+      .ui-datepicker-calendar tbody td a.ui-state-active {
+        background-color: #009688;
+        color: white;
+      }
+      .ui-datepicker-header a.ui-corner-all {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        width: 2rem;
+        height: 2rem;
+        margin: 0.5rem;
+        border-radius: 0.25rem;
+        transition: 0.3s all;
+      }
+      .ui-datepicker-header a.ui-corner-all:hover {
+        background-color: #eceff1;
+      }
+      .ui-datepicker-header a.ui-datepicker-prev {
+        left: 0;
+        background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMyIgaGVpZ2h0PSIxMyIgdmlld0JveD0iMCAwIDEzIDEzIj48cGF0aCBmaWxsPSIjNDI0NzcwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03LjI4OCA2LjI5NkwzLjIwMiAyLjIxYS43MS43MSAwIDAgMSAuMDA3LS45OTljLjI4LS4yOC43MjUtLjI4Ljk5OS0uMDA3TDguODAzIDUuOGEuNjk1LjY5NSAwIDAgMSAuMjAyLjQ5Ni42OTUuNjk1IDAgMCAxLS4yMDIuNDk3bC00LjU5NSA0LjU5NWEuNzA0LjcwNCAwIDAgMS0xLS4wMDcuNzEuNzEgMCAwIDEtLjAwNi0uOTk5bDQuMDg2LTQuMDg2eiIvPjwvc3ZnPg==");
+        background-repeat: no-repeat;
+        background-size: 0.5rem;
+        background-position: 50%;
+        transform: rotate(180deg);
+      }
+      .ui-datepicker-header a.ui-datepicker-next {
+        right: 0;
+        background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMyIgaGVpZ2h0PSIxMyIgdmlld0JveD0iMCAwIDEzIDEzIj48cGF0aCBmaWxsPSIjNDI0NzcwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik03LjI4OCA2LjI5NkwzLjIwMiAyLjIxYS43MS43MSAwIDAgMSAuMDA3LS45OTljLjI4LS4yOC43MjUtLjI4Ljk5OS0uMDA3TDguODAzIDUuOGEuNjk1LjY5NSAwIDAgMSAuMjAyLjQ5Ni42OTUuNjk1IDAgMCAxLS4yMDIuNDk3bC00LjU5NSA0LjU5NWEuNzA0LjcwNCAwIDAgMS0xLS4wMDcuNzEuNzEgMCAwIDEtLjAwNi0uOTk5bDQuMDg2LTQuMDg2eiIvPjwvc3ZnPg==");
+        background-repeat: no-repeat;
+        background-size: 10px;
+        background-position: 50%;
+      }
+      .ui-datepicker-header a > span {
+        display: none;
+      }
+      .ui-datepicker-title {
+        text-align: center;
+        line-height: 2rem;
+        margin-bottom: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding-bottom: 0.25rem;
+      }
+      .ui-datepicker-week-col {
+        color: #78909c;
+        font-weight: 400;
+        font-size: 0.75rem;
+      }
+
+      .txt {
+        outline: none;
+        background-color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <div class="nav">
+          <div class="heading">
+            <a href="#"
+              ><p>One<span id="health">health</span></p></a
+            >
+          </div>
+          <div class="subheading">
+            <h4>{{ name }}</h4>
+            <a href="/logout"><p>Logout</p></a>
+          </div>
+        </div>
+
+        <div class="bodyhold">
+          <div class="sidebar">
+            <div class="sidehold">
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-house-user"></i></div>
+                <p class="option">
+                  <a href="/user/{{ name }}">Home</a>
+                </p>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-disease"></i></div>
+                <div class="option">Diabetes</div>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="option">Heart Disease</div>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon">
+                  <i class="fa-solid fa-house-user"></i>
+                </div>
+                <p class="option">
+                  <a href="/app_booking">Appointment Booking</a>
+                </p>
+              </div>
+
+              <div class="optionhold actoptionhold">
+                <div class="icon acticon">
+                  <i class="fa-solid fa-house-user acti"></i>
+                </div>
+                <p class="option actoption">
+                  <a href="/apphistory/{{ name }}">Active Appointments</a>
+                </p>
+              </div>
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-house-user"></i></div>
+                <p class="option">
+                  <a href="/apphistorycanceled/{{ name }}"
+                    >Appointment History</a
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="containthold">
+            <div class="tblhold">
+              <table id="customers">
+                <tr>
+                  <th>Doctor Name</th>
+                  <th>Specalization</th>
+                  <th>Consultancy fee</th>
+                  <th>Appointment date</th>
+                  <th>Appointment Time</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+                {% for item in data %}
+                <tr>
+                  <td>{{item[2]}}</td>
+                  <td>{{item[3]}}</td>
+                  <td>{{item[4]}}</td>
+                  <td>{{item[5]}}</td>
+                  <td>{{item[6]}}</td>
+                  <td style="color: #28a745; font-weight: bold">{{item[7]}}</td>
+                  <td>
+                    <a href="/cancelAppByUser/{{item[0]}}/{{ name }}"
+                      ><input type="button" value="Cancel"
+                    /></a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <script>
+      $(function () {
+        $("#datepicker").datepicker({
+          dateFormat: "dd-mm-yy",
+          duration: "fast",
+        });
+      });
+    </script> -->
+
+    <div>
+      <!-- Begin alerts -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <script>
+        Swal.fire({
+          title: "{{ category.title() }}!",
+          // success , error , warning ,info
+
+          text: "{{ message }}",
+          // Custom message flashed from your flask routes
+
+          icon: "{{ category }}" == "danger" ? "error" : "{{ category }}",
+          // success , error , warning ,info
+        });
+      </script>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- End alerts -->
+    </div>
+  </body>
+</html>

@@ -16,8 +16,8 @@ mail_settings = {
     "MAIL_PORT": 465,
     "MAIL_USE_TLS": False,
     "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": 'shreetikyt2020@gmail.com',
-    "MAIL_PASSWORD": 'uttvwjaxhiambpcv'
+    "MAIL_USERNAME": 'onehealth.noreply@gmail.com',
+    "MAIL_PASSWORD": 'kejubbtuazirmqpw'
 }
 app.config.update(mail_settings)
 mail = Mail(app)
@@ -62,10 +62,18 @@ def adminlogin():
     return render_template('admin_login.html')
 
 
-@ app.route('/user')
-def userpanel():
+@ app.route('/user/<string:cuser>')
+def userpanel(cuser):
     if 'user_name' in session:
-        return render_template('userdashboard.html', name=session['user_name'])
+        cursor.execute(
+            """SELECT * FROM `appointment_tbl` WHERE `patient_name` LIKE '{}' AND `deleted_by` LIKE '{}'""".format(cuser, '-'))
+        active = cursor.fetchall()
+        activeC = len(active)
+        cursor.execute(
+            """SELECT * FROM `appointment_tbl` WHERE `patient_name` LIKE '{}' AND `deleted_by` NOT LIKE '{}'""".format(cuser, '-'))
+        canceled = cursor.fetchall()
+        canceledC = len(canceled)
+        return render_template('userdashboard.html', name=session['user_name'], activeC=activeC, canceledC=canceledC)
     else:
         return redirect('/login')
 
@@ -125,7 +133,8 @@ def validateLogin():
 
         if len(user) > 0:
             session['user_name'] = user[0][2]
-            return redirect('/user')
+            user = session['user_name']
+            return redirect("/user/{}".format(user))
         else:
             flash(f"Invalid user credentials", "error")
             return redirect('/login')
@@ -151,7 +160,10 @@ def admindash():
         cursor.execute("""SELECT * FROM `user`""")
         user = cursor.fetchall()
         ucount = len(user)
-        return render_template('adminDashboard.html', name=session['user_name'], dcount=dcount, ucount=ucount)
+        cursor.execute("""SELECT * FROM `appointment_tbl`""")
+        active = cursor.fetchall()
+        activeC = len(active)
+        return render_template('adminDashboard.html', name=session['user_name'], dcount=dcount, ucount=ucount, activeC=activeC)
     else:
         return redirect('/adminLogin')
 
@@ -220,6 +232,147 @@ def viewdoctor():
         return redirect('/adminLogin')
 
 
+@ app.route('/adminsideapp')
+def viewtotalapp():
+    cursor.execute("""SELECT * FROM `appointment_tbl`""")
+    data = cursor.fetchall()
+
+    if 'user_name' in session:
+        return render_template('adminSideApp.html', name=session['user_name'], data=data)
+    else:
+        return redirect('/adminLogin')
+
+
+@ app.route('/edit_doctor/<int:id>')
+def editdoctor(id):
+
+    cursor.execute(
+        """SELECT * FROM `doctor_tbl` WHERE `id` LIKE '{}'""".format(id))
+    data = cursor.fetchall()
+
+    if 'user_name' in session:
+        return render_template('edit_doctor.html', name=session['user_name'], data=data)
+    else:
+        return redirect('/adminLogin')
+
+
+@ app.route('/update_doctor/<int:id>', methods=['POST'])
+def updatedoctor(id):
+
+    dname = request.form.get('dname')
+    email = request.form.get('txtemail')
+    phone = request.form.get('txtno')
+    spec = request.form.get('selectspec')
+    fee = request.form.get('txtfee')
+    password = request.form.get('txtpass')
+
+    cursor.execute(
+        """UPDATE `doctor_tbl` SET `doctor_name`='{}', `phone_no`='{}',`email`='{}',`specalization`='{}',`fee`='{}',`password`='{}'  WHERE `id`={} """.format(dname, phone, email, spec, fee, password, id))
+    conn.commit()
+    if cursor.rowcount == 1:
+        flash(f"Doctor Updated Succesfully", "success")
+        return redirect('/view_doctor')
+    else:
+        flash(f"Server Error", "danger")
+        return redirect("/edit_doctor/{}".format(id))
+
+
+@ app.route('/delete_doctor/<int:id>')
+def deletedoctor(id):
+
+    cursor.execute(
+        """DELETE FROM `doctor_tbl` WHERE `id`={}""".format(id))
+    conn.commit()
+
+    if cursor.rowcount == 1:
+        flash(f"One Doctor Deleted Succesfully", "success")
+        return redirect('/view_doctor')
+    else:
+        flash(f"Server Error", "danger")
+        return redirect('/view_doctor')
+
+
+@ app.route('/app_booking')
+def appbooking():
+    if 'user_name' in session:
+        return render_template('appbooking.html', name=session['user_name'])
+    else:
+        return redirect('/login')
+
+
+@ app.route('/bookapp/<string:dept>')
+def bookappbycat(dept):
+    print(dept)
+    cursor.execute(
+        """SELECT * FROM `doctor_tbl` WHERE `specalization` LIKE '{}'""".format(dept))
+    data = cursor.fetchall()
+
+    if 'user_name' in session:
+        return render_template('bookappbycat.html', name=session['user_name'], data=data)
+    else:
+        return redirect('/adminLogin')
+
+
+@ app.route('/saveapp/<string:user>', methods=['POST'])
+def saveapp(user):
+    spec = request.form.get('txtdept')
+    dname = request.form.get('txtname')
+    fee = request.form.get('txtfee')
+    date = request.form.get('txtdate')
+    time = request.form.get('txttime')
+
+    cursor.execute("""INSERT INTO `appointment_tbl` (`appointment_id`,`patient_name`,`doctor_name`,`specalization`,`fee`,`date`,`time`,`status`,`deleted_by`) VALUES(NULL,'{}','{}','{}','{}','{}','{}','{}','{}')""".format(
+        user, dname, spec, fee, date, time, 'ACTIVE', '-'))
+
+    conn.commit()
+    if cursor.rowcount == 1:
+        flash(f"Appointment Booked Successfully", "success")
+    else:
+        flash(f"Server Error", "danger")
+
+    return redirect("/app_booking")
+
+
+@ app.route('/apphistory/<string:user>')
+def apphistory(user):
+
+    cursor.execute(
+        """SELECT * FROM `appointment_tbl` WHERE `patient_name` LIKE '{}' AND `deleted_by` LIKE '{}'""".format(user, '-'))
+    data = cursor.fetchall()
+    print(data)
+    if 'user_name' in session:
+        return render_template('userapphistory.html', name=session['user_name'], data=data)
+    else:
+        return redirect('/adminLogin')
+
+
+@ app.route('/apphistorycanceled/<string:user>')
+def cancelhistory(user):
+
+    cursor.execute(
+        """SELECT * FROM `appointment_tbl` WHERE `patient_name` LIKE '{}' AND `deleted_by` NOT LIKE '{}'""".format(user, '-'))
+    data = cursor.fetchall()
+    print(data)
+    if 'user_name' in session:
+        return render_template('canceledApphistory.html', name=session['user_name'], data=data)
+    else:
+        return redirect('/adminLogin')
+
+
+@ app.route('/cancelAppByUser/<int:id>/<string:user>')
+def appcancel(id, user):
+
+    cursor.execute(
+        """UPDATE `appointment_tbl` SET `deleted_by`='{}',`status`='{}' WHERE `appointment_id`={} """.format('User', 'CANCELED', id))
+    conn.commit()
+    if cursor.rowcount == 1:
+        flash(f"Appointment Canceled Successfully", "success")
+        return redirect("/apphistory/{}".format(user))
+    else:
+        flash(f"Server Error", "danger")
+        return redirect("/apphistory/{}".format(user))
+
+
 @ app.route('/forgot_Password')
 def forgotpass():
     return render_template('forgotPassword.html')
@@ -235,10 +388,12 @@ def index():
         password = cursor.fetchone()
         msg = Message(
             'Your Onehealth Login Password',
-            sender='shreetikyt2020@gmail.com',
+            sender='Onehealth',
             recipients=[email]
         )
-        msg.body = "Password : '{}'".format(password[0])
+        #msg.body = "Password : '{}'".format(password[0])
+        msg.html = "<h1 style='display:inline-block'>Password : </h1>&nbsp;<h1 style='color:green;display:inline-block'>{}</h1>".format(
+            password[0])
         mail.send(msg)
 
         flash(f"Please check your email", "success")

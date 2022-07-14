@@ -216,7 +216,7 @@ h3{
 
               <div class="optionhold">
                 <div class="icon"><i class="fa-solid fa-shield-virus"></i></div>
-                <div class="option">appointment</div>
+                <div class="option"><a href="/adminsideapp">appointments</a></div>
               </div>
             </div>
           </div>
@@ -224,7 +224,7 @@ h3{
             <div class="tblhold">
             <table id="customers">
                 <tr>
-                  <th>Id</th>
+                  <th>Sl No.</th>
                   <th>Doctor Name</th>
                   <th>Specalization</th>
                   <th>Email</th>
@@ -233,14 +233,14 @@ h3{
                 </tr>
                 {% for item in data %}
                 <tr>
-                  <td>{{item[0]}}</td>
+                  <td>{{loop.index}}</td>
                   <td>{{item[1]}}</td>
                   <td>{{item[4]}}</td>
                   <td>{{item[3]}}</td>
                   <td>{{item[2]}}</td>
                   <td>
-                    <i class="fa-solid fa-file-pen icn"></i>
-                    <i class="fa-solid fa-trash-can icn2"></i>
+                   <a href="/edit_doctor/{{item[0]}}"><i class="fa-solid fa-file-pen icn"></i></a> 
+                   <a href="/delete_doctor/{{item[0]}}"><i class="fa-solid fa-trash-can icn2"></i></a> 
                   </td>
                 </tr>
                 {% endfor %}
