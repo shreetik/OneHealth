@@ -6,6 +6,7 @@ from flask_recaptcha import ReCaptcha
 from requests import post
 from flask_mail import Mail, Message
 import mysql.connector
+import razorpay
 import os
 
 app = Flask(__name__)
@@ -209,8 +210,8 @@ def createDoctor():
     fee = request.form.get('txtfee')
     password = request.form.get('txtpass')
 
-    cursor.execute("""INSERT INTO `doctor_tbl` (`id`,`doctor_name`,`phone_no`,`email`,`specalization`,`fee`,`password`) VALUES(NULL,'{}','{}','{}','{}','{}','{}')""".format(
-        fullname, phone, email, spec, fee, password))
+    cursor.execute("""INSERT INTO `doctor_tbl` (`id`,`doctor_name`,`phone_no`,`email`,`specalization`,`fee`,`password`,`reservedSlots`) VALUES(NULL,'{}','{}','{}','{}','{}','{}','{}')""".format(
+        fullname, phone, email, spec, fee, password, 0))
 
     conn.commit()
     if cursor.rowcount == 1:
@@ -321,16 +322,60 @@ def saveapp(user):
     date = request.form.get('txtdate')
     time = request.form.get('txttime')
 
-    cursor.execute("""INSERT INTO `appointment_tbl` (`appointment_id`,`patient_name`,`doctor_name`,`specalization`,`fee`,`date`,`time`,`status`,`deleted_by`) VALUES(NULL,'{}','{}','{}','{}','{}','{}','{}','{}')""".format(
-        user, dname, spec, fee, date, time, 'ACTIVE', '-'))
+    # checking for user
+    cursor.execute("""SELECT * FROM `appointment_tbl` WHERE `patient_name` LIKE '{}' AND `doctor_name` LIKE '{}' AND `deleted_by` LIKE '{}'  """.format(user, dname, '-'))
+    usercount = cursor.fetchall()
+    if(len(usercount) > 0):
+        flash(f"Your Appointment is already booked with this Doctor", "info")
+        return redirect("/bookapp/{}".format(spec))
 
-    conn.commit()
-    if cursor.rowcount == 1:
-        flash(f"Appointment Booked Successfully", "success")
+    # checking for user date and time
+    cursor.execute("""SELECT * FROM `appointment_tbl` WHERE `patient_name` LIKE '{}' AND `date` LIKE '{}' AND `time` LIKE '{}' AND `deleted_by` LIKE '{}'  """.format(user, date, time, '-'))
+    userdate = cursor.fetchall()
+    if(len(userdate) > 0):
+        flash(f"Your Appointment is already booked on this Date and Time! Please select another time slot.", "info")
+        return redirect("/bookapp/{}".format(spec))
+
+    # checking for doctor count
+    cursor.execute(
+        """SELECT * FROM `appointment_tbl` WHERE `doctor_name` LIKE '{}' AND `deleted_by` LIKE '{}'  """.format(dname, '-'))
+    docCount = cursor.fetchall()
+    if(len(docCount) >= 21):
+        flash(f"Sorry Appointment Slot is full for this Doctor", "info")
+        return redirect("/bookapp/{}".format(spec))
+
+    # payment integration
+    client = razorpay.Client(
+        auth=("rzp_test_fWhGQ0AQG7bRKg", "NmsEp8V9JBqL56X0lPKlZA9h"))
+
+    data = {"amount": int(int(fee)*100), "currency": "INR",
+            "receipt": "order_rcptid_11"}
+    payment = client.order.create(data=data)
+    print(payment)
+
+    if 'user_name' in session:
+        return render_template('payment.html', payment=payment, user=user, spec=spec, dname=dname, fee=fee, date=date, time=time, name=session['user_name'])
     else:
-        flash(f"Server Error", "danger")
+        return redirect('/adminLogin')
 
-    return redirect("/app_booking")
+
+@ app.route('/paymentsuccess')
+def paysuc():
+    return render_template('paymentsuccess.html')
+
+
+def updateDocTbl(dname):
+    print("hello")
+    cursor.execute(
+        """SELECT * FROM `appointment_tbl` WHERE `doctor_name` LIKE '{}' AND `deleted_by` LIKE '{}'""".format(dname, '-'))
+    doc = cursor.fetchall()
+    print(doc)
+    docCount = len(doc)
+    print(docCount)
+    cursor.execute(
+        """UPDATE `doctor_tbl` SET `reservedSlots`='{}'  WHERE `doctor_name`= '{}' """.format(docCount, dname))
+    conn.commit()
+    return True
 
 
 @ app.route('/apphistory/<string:user>')
@@ -359,13 +404,22 @@ def cancelhistory(user):
         return redirect('/adminLogin')
 
 
-@ app.route('/cancelAppByUser/<int:id>/<string:user>')
-def appcancel(id, user):
+@ app.route('/cancelAppByUser/<int:id>/<string:user>/<string:doctor>')
+def appcancel(id, user, doctor):
 
     cursor.execute(
-        """UPDATE `appointment_tbl` SET `deleted_by`='{}',`status`='{}' WHERE `appointment_id`={} """.format('User', 'CANCELED', id))
+        """UPDATE `appointment_tbl` SET `deleted_by`='{}',`status`='{}' WHERE `appointment_id`='{}' """.format('User', 'CANCELED', id))
     conn.commit()
     if cursor.rowcount == 1:
+
+        cursor.execute(
+            """SELECT * FROM `appointment_tbl` WHERE `doctor_name` LIKE '{}' AND `deleted_by` LIKE '{}'  """.format(doctor, '-'))
+        doc = cursor.fetchall()
+        docCount = len(doc)
+        cursor.execute(
+            """UPDATE `doctor_tbl` SET `reservedSlots`='{}'  WHERE `doctor_name`='{}' """.format(docCount, doctor))
+        conn.commit()
+
         flash(f"Appointment Canceled Successfully", "success")
         return redirect("/apphistory/{}".format(user))
     else:
@@ -391,7 +445,7 @@ def index():
             sender='Onehealth',
             recipients=[email]
         )
-        #msg.body = "Password : '{}'".format(password[0])
+        # msg.body = "Password : '{}'".format(password[0])
         msg.html = "<h1 style='display:inline-block'>Password : </h1>&nbsp;<h1 style='color:green;display:inline-block'>{}</h1>".format(
             password[0])
         mail.send(msg)

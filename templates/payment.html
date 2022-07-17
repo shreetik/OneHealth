@@ -21,10 +21,16 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"
+      integrity="sha512-/n/dTQBO8lHzqqgAQvy0ukBQ0qLmGzxKhn8xKrz4cn7XJkZzy+fAtzjnOQd5w55h4k1kUC+8oIe6WmrGUYwODA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>booking</title>
+    <title>Payment</title>
     <style>
       .containthold {
         display: flex;
@@ -101,8 +107,8 @@
         resize: vertical;
       }
 
-      input[type="button"] {
-        background-color: #dc3545;
+      input[type="submit"] {
+        background-color: #0457aa;
         color: white;
         padding: ;
         border: none;
@@ -113,8 +119,8 @@
         height: 2.8rem;
       }
 
-      input[type="button"]:hover {
-        background-color: #ed4c5c;
+      input[type="submit"]:hover {
+        background-color: #217fde;
       }
       form {
         width: 55rem;
@@ -277,6 +283,21 @@
         font-size: 0.75rem;
       }
 
+      input[type="button"] {
+        background-color: #0457aa;
+        color: white;
+        width: 63px;
+        height: 31px;
+        margin-right: 83rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+
+      input[type="button"]:hover {
+        background-color: #217fde;
+      }
       .txt {
         outline: none;
         background-color: white;
@@ -286,6 +307,41 @@
         width: 10px;
         color: black;
         margin-right: 25px;
+      }
+      .payhold {
+        width: 30rem;
+        height: 30rem;
+        background-color: #009688;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        overflow: hidden;
+      }
+      .info {
+        background-color: #ccc;
+        width: 30rem;
+        height: 30rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        flex-direction: column;
+      }
+      .jk {
+        width: 100%;
+        height: 2rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hh {
+        width: 180px;
+        height: 30px;
+      }
+      .bb {
+        width: 190px;
+        height: 30px;
       }
     </style>
   </head>
@@ -326,20 +382,18 @@
                 <div class="option">Heart Disease</div>
               </div>
 
-              <div class="optionhold">
-                <div class="icon">
-                  <i class="fa-solid fa-house-user"></i>
-                </div>
-                <p class="option">
-                  <a href="/app_booking">Appointment Booking</a>
-                </p>
-              </div>
-
               <div class="optionhold actoptionhold">
                 <div class="icon acticon">
                   <i class="fa-solid fa-house-user acti"></i>
                 </div>
                 <p class="option actoption">
+                  <a href="/app_booking">Appointment Booking</a>
+                </p>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon"><i class="fa-solid fa-house-user"></i></div>
+                <p class="option">
                   <a href="/apphistory/{{ name }}">Active Appointments</a>
                 </p>
               </div>
@@ -354,47 +408,61 @@
             </div>
           </div>
           <div class="containthold">
-            <div class="tblhold">
-              <table id="customers">
-                <tr>
-                  <th>Doctor Name</th>
-                  <th>Specalization</th>
-                  <th>Consultancy fee</th>
-                  <th>Appointment date</th>
-                  <th>Appointment Time</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-                {% for item in data %}
-                <tr>
-                  <td>{{item[2]}}</td>
-                  <td>{{item[3]}}</td>
-                  <td>{{item[4]}}</td>
-                  <td>{{item[5]}}</td>
-                  <td>{{item[6]}}</td>
-                  <td style="color: #28a745; font-weight: bold">{{item[7]}}</td>
-                  <td>
-                    <a
-                      href="/cancelAppByUser/{{item[0]}}/{{ name }}/{{item[2]}}"
-                      ><input type="button" value="Cancel"
-                    /></a>
-                  </td>
-                </tr>
-                {% endfor %}
-              </table>
+            <div class="info">
+              <div class="jk">
+                <div class="hh" style="width: 200px">Payment Information</div>
+              </div>
+              <div class="jk">
+                <div class="hh">Patient Name</div>
+                <div class="bb">{{user}}</div>
+              </div>
+              <div class="jk">
+                <div class="hh">Doctor Name</div>
+                <div class="bb">{{dname}}</div>
+              </div>
+              <div class="jk">
+                <div class="hh">Specalization</div>
+                <div class="bb">{{spec}}</div>
+              </div>
+              <div class="jk">
+                <div class="hh">appointment Date</div>
+                <div class="bb">{{date}}</div>
+              </div>
+              <div class="jk">
+                <div class="hh">appointment Time</div>
+                <div class="bb">{{time}}</div>
+              </div>
+              <div class="jk">
+                <div class="hh">Consultancy fee</div>
+                <div class="bb">{{fee}}</div>
+              </div>
+              <div class="jk">
+                <div class="hh">
+                  <form action="/paymentsuccess">
+                    <script
+                      src="https://checkout.razorpay.com/v1/checkout.js"
+                      data-key="rzp_test_fWhGQ0AQG7bRKg"
+                      data-amount="{{payment['amount']}}"
+                      data-currency="INR"
+                      data-order_id="{{payment['id']}}"
+                      data-buttontext="Pay with RazorPay"
+                      data-name="Onehealth"
+                      data-description="Appointment Fee"
+                      data-theme.color=""
+                    ></script>
+                    <input
+                      type="hidden"
+                      custom="Hidden Element"
+                      name="hidden"
+                    />
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- <script>
-      $(function () {
-        $("#datepicker").datepicker({
-          dateFormat: "dd-mm-yy",
-          duration: "fast",
-        });
-      });
-    </script> -->
 
     <div>
       <!-- Begin alerts -->

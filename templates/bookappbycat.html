@@ -21,6 +21,12 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"
+      integrity="sha512-/n/dTQBO8lHzqqgAQvy0ukBQ0qLmGzxKhn8xKrz4cn7XJkZzy+fAtzjnOQd5w55h4k1kUC+8oIe6WmrGUYwODA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -376,12 +382,14 @@
                   <th>Consultancy fee</th>
                   <th>appointment date</th>
                   <th>appointment Time</th>
+                  <th>Available Slots</th>
                   <th>Action</th>
                 </tr>
                 {% for item in data %}
                 <tr>
                   <form
                     name="f{{loop.index}}"
+                    id="f{{loop.index}}"
                     action="/saveapp/{{ name }}"
                     method="post"
                   >
@@ -416,31 +424,115 @@
                       />
                     </td>
                     <td>
-                      <input
-                        type="text"
-                        name="txtdate"
-                        id="datepicker{{loop.index}}"
-                        placeholder="Pick a date"
-                        autocomplete="off"
-                      />
+                      <select name="txtdate" id="d{{loop.index}}">
+                        <option value="NA">Select Date</option>
+                      </select>
                       <script>
                         $(function () {
-                          $("#datepicker{{loop.index}}").datepicker({
-                            dateFormat: "dd-mm-yy",
-                            duration: "fast",
-                          });
+                          var tomorrowDate1 = new Date.today()
+                            .addDays(1)
+                            .toString("dd-MM-yyyy");
+                          var tomorrowDate2 = new Date.today()
+                            .addDays(2)
+                            .toString("dd-MM-yyyy");
+                          var tomorrowDate3 = new Date.today()
+                            .addDays(3)
+                            .toString("dd-MM-yyyy");
+                          var tomorrowDate4 = new Date.today()
+                            .addDays(4)
+                            .toString("dd-MM-yyyy");
+
+                          var newOption = $("<option>");
+                          newOption
+                            .attr("value", tomorrowDate1)
+                            .text(tomorrowDate1);
+                          $("#d{{loop.index}}").append(newOption);
+
+                          var newOption = $("<option>");
+                          newOption
+                            .attr("value", tomorrowDate2)
+                            .text(tomorrowDate2);
+                          $("#d{{loop.index}}").append(newOption);
+
+                          var newOption = $("<option>");
+                          newOption
+                            .attr("value", tomorrowDate3)
+                            .text(tomorrowDate3);
+                          $("#d{{loop.index}}").append(newOption);
+
+                          var newOption = $("<option>");
+                          newOption
+                            .attr("value", tomorrowDate4)
+                            .text(tomorrowDate4);
+                          $("#d{{loop.index}}").append(newOption);
+                        });
+
+                        var date = true;
+
+                        $("#d{{loop.index}}").focusout(function () {
+                          var cdate = $("#d{{loop.index}}").val();
+
+                          if (cdate === "NA") {
+                            date = true;
+                          } else {
+                            date = false;
+                          }
+                        });
+
+                        $("#f{{loop.index}}").submit(function (event) {
+                          if (date === false) {
+                            return true;
+                          } else {
+                            event.preventDefault();
+                            Swal.fire({
+                              title: "Warning!",
+
+                              text: "Please Select the Date",
+
+                              icon: "warning",
+                            });
+                          }
                         });
                       </script>
                     </td>
                     <td>
-                      <select name="txttime" id="">
+                      <select name="txttime" id="t{{loop.index}}">
                         <option value="NA">Select Time</option>
                         <option value="10AM to 1PM">10AM to 1PM</option>
                         <option value="1PM to 4PM">1PM to 4PM</option>
                         <option value="4PM to 6PM">4PM to 6PM</option>
                         <option value="7PM to 10PM">7PM to 10PM</option>
                       </select>
+                      <script>
+                        var time = true;
+
+                        $("#t{{loop.index}}").focusout(function () {
+                          var ctime = $("#t{{loop.index}}").val();
+
+                          if (ctime === "NA") {
+                            time = true;
+                          } else {
+                            time = false;
+                          }
+                        });
+
+                        $("#f{{loop.index}}").submit(function (event) {
+                          if (time === false) {
+                            return true;
+                          } else {
+                            event.preventDefault();
+                            Swal.fire({
+                              title: "Warning!",
+
+                              text: "Please Select the Time",
+
+                              icon: "warning",
+                            });
+                          }
+                        });
+                      </script>
                     </td>
+                    <td>{{20-item[7]}}/20</td>
                     <td><input type="submit" value="Book Appointment" /></td>
                   </form>
                 </tr>
@@ -451,14 +543,9 @@
         </div>
       </div>
     </div>
-    <!-- <script>
-      $(function () {
-        $("#datepicker").datepicker({
-          dateFormat: "dd-mm-yy",
-          duration: "fast",
-        });
-      });
-    </script> -->
+    <script>
+      $(document).ready(function () {});
+    </script>
 
     <div>
       <!-- Begin alerts -->

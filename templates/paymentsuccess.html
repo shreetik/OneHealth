@@ -102,9 +102,9 @@
       }
 
       input[type="button"] {
-        background-color: #dc3545;
+        background-color: #007bff;
         color: white;
-        padding: ;
+        margin-top: 15px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
@@ -114,7 +114,7 @@
       }
 
       input[type="button"]:hover {
-        background-color: #ed4c5c;
+        background-color: #3a93f3;
       }
       form {
         width: 55rem;
@@ -287,6 +287,60 @@
         color: black;
         margin-right: 25px;
       }
+
+      .wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+      }
+      .checkmark__circle {
+        stroke-dasharray: 166;
+        stroke-dashoffset: 166;
+        stroke-width: 2;
+        stroke-miterlimit: 10;
+        stroke: #7ac142;
+        fill: none;
+        animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+      }
+      .checkmark {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: block;
+        stroke-width: 2;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        margin: 10% auto;
+        box-shadow: inset 0px 0px 0px #7ac142;
+        animation: fill 0.4s ease-in-out 0.4s forwards,
+          scale 0.3s ease-in-out 0.9s both;
+      }
+      .checkmark__check {
+        transform-origin: 50% 50%;
+        stroke-dasharray: 48;
+        stroke-dashoffset: 48;
+        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+      }
+      @keyframes stroke {
+        100% {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes scale {
+        0%,
+        100% {
+          transform: none;
+        }
+        50% {
+          transform: scale3d(1.1, 1.1, 1);
+        }
+      }
+      @keyframes fill {
+        100% {
+          box-shadow: inset 0px 0px 0px 30px #7ac142;
+        }
+      }
     </style>
   </head>
   <body>
@@ -326,20 +380,20 @@
                 <div class="option">Heart Disease</div>
               </div>
 
-              <div class="optionhold">
-                <div class="icon">
-                  <i class="fa-solid fa-house-user"></i>
-                </div>
-                <p class="option">
-                  <a href="/app_booking">Appointment Booking</a>
-                </p>
-              </div>
-
               <div class="optionhold actoptionhold">
                 <div class="icon acticon">
                   <i class="fa-solid fa-house-user acti"></i>
                 </div>
                 <p class="option actoption">
+                  <a href="/app_booking">Appointment Booking</a>
+                </p>
+              </div>
+
+              <div class="optionhold">
+                <div class="icon">
+                  <i class="fa-solid fa-house-user"></i>
+                </div>
+                <p class="option">
                   <a href="/apphistory/{{ name }}">Active Appointments</a>
                 </p>
               </div>
@@ -355,33 +409,29 @@
           </div>
           <div class="containthold">
             <div class="tblhold">
-              <table id="customers">
-                <tr>
-                  <th>Doctor Name</th>
-                  <th>Specalization</th>
-                  <th>Consultancy fee</th>
-                  <th>Appointment date</th>
-                  <th>Appointment Time</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-                {% for item in data %}
-                <tr>
-                  <td>{{item[2]}}</td>
-                  <td>{{item[3]}}</td>
-                  <td>{{item[4]}}</td>
-                  <td>{{item[5]}}</td>
-                  <td>{{item[6]}}</td>
-                  <td style="color: #28a745; font-weight: bold">{{item[7]}}</td>
-                  <td>
-                    <a
-                      href="/cancelAppByUser/{{item[0]}}/{{ name }}/{{item[2]}}"
-                      ><input type="button" value="Cancel"
-                    /></a>
-                  </td>
-                </tr>
-                {% endfor %}
-              </table>
+              <div class="wrapper">
+                <svg
+                  class="checkmark"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 52 52"
+                >
+                  <circle
+                    class="checkmark__circle"
+                    cx="26"
+                    cy="26"
+                    r="25"
+                    fill="none"
+                  />
+                  <path
+                    class="checkmark__check"
+                    fill="none"
+                    d="M14.1 27.2l7.1 7.2 16.7-16.8"
+                  />
+                </svg>
+              </div>
+              <h2>Your payment is successful</h2>
+              <p>Please check your mail for more details.</p>
+              <input type="button" value="Home" />
             </div>
           </div>
         </div>
