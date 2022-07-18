@@ -1,6 +1,7 @@
 from asyncio.windows_events import NULL
 from distutils.log import debug
 from email import message
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_recaptcha import ReCaptcha
 from requests import post
@@ -8,6 +9,10 @@ from flask_mail import Mail, Message
 import mysql.connector
 import razorpay
 import os
+import numpy as np
+import joblib
+from datetime import date
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -120,6 +125,77 @@ def viewuser():
         return render_template('view_patients.html', name=session['user_name'], data=data)
     else:
         return redirect('/adminLogin')
+
+# diabetes
+
+
+@ app.route('/diabetesform')
+def dbf():
+    if 'user_name' in session:
+        return render_template('DiabetesPredict.html', name=session['user_name'])
+    else:
+        return redirect('/login')
+
+
+def ValuePredictor(to_predict_list, size):
+    to_predict = np.array(to_predict_list).reshape(1, size)
+    if(size == 6):
+        loaded_model = joblib.load(
+            r'F:\WorkSpace\MCA PROJECT\OneHealth\diabetes_model.pkl')
+        result = loaded_model.predict(to_predict)
+    return result[0]
+
+
+@app.route('/dia_predict', methods=["POST"])
+def predict():
+    if request.method == "POST":
+        to_predict_list = request.form.to_dict()
+        to_predict_list = list(to_predict_list.values())
+        to_predict_list = list(map(float, to_predict_list))
+        # diabetes
+        if(len(to_predict_list) == 6):
+            result = ValuePredictor(to_predict_list, 6)
+
+    if(int(result) == 1):
+        prediction = "Sorry to say but your chances of getting the disease is high. Please consult the doctor immediately"
+    else:
+        prediction = "No need to fear. You have no dangerous symptoms of the disease"
+    return(render_template("diaresult.html", prediction_text=prediction))
+
+
+# Heart
+@ app.route('/heartform')
+def dbh():
+    if 'user_name' in session:
+        return render_template('heartpredict.html', name=session['user_name'])
+    else:
+        return redirect('/login')
+
+
+def ValuePredictorheart(to_predict_list, size):
+    to_predict = np.array(to_predict_list).reshape(1, size)
+    if(size == 7):
+        loaded_model = joblib.load(
+            r'F:\WorkSpace\MCA PROJECT\OneHealth\heart_model.pkl')
+        result = loaded_model.predict(to_predict)
+    return result[0]
+
+
+@app.route('/heartpredict', methods=["POST"])
+def predicth():
+    if request.method == "POST":
+        to_predict_list = request.form.to_dict()
+        to_predict_list = list(to_predict_list.values())
+        to_predict_list = list(map(float, to_predict_list))
+        # diabetes
+        if(len(to_predict_list) == 7):
+            result = ValuePredictorheart(to_predict_list, 7)
+
+    if(int(result) == 1):
+        prediction = "Sorry to say but your chances of getting the disease is high. Please consult the doctor immediately"
+    else:
+        prediction = "No need to fear. You have no dangerous symptoms of the disease"
+    return(render_template("heartresult.html", prediction_text=prediction))
 
 
 @ app.route('/validate_login', methods=['POST'])
@@ -359,9 +435,41 @@ def saveapp(user):
         return redirect('/adminLogin')
 
 
-@ app.route('/paymentsuccess')
-def paysuc():
-    return render_template('paymentsuccess.html')
+@ app.route('/paymentsuccess/<string:user>/<string:dname>/<string:spec>/<string:date>/<string:time>/<string:fee>/<string:payid>', methods=['POST'])
+def paysuc(user, dname, spec, date, time, fee, payid):
+    cursor.execute("""INSERT INTO `appointment_tbl` (`appointment_id`,`patient_name`,`doctor_name`,`specalization`,`fee`,`date`,`time`,`status`,`deleted_by`) VALUES(NULL,'{}','{}','{}','{}','{}','{}','{}','{}')""".format(
+        user, dname, spec, fee, date, time, 'ACTIVE', '-'))
+    conn.commit()
+    if cursor.rowcount == 1:
+        updateDocTbl(dname)
+        cursor.execute(
+            """SELECT `email_id` FROM `user` WHERE `user_name` LIKE '{}'""".format(user))
+        useremail = cursor.fetchall()
+        uemail = useremail[0][0]
+        # doc email
+        cursor.execute(
+            """SELECT `email` FROM `doctor_tbl` WHERE `doctor_name` LIKE '{}'""".format(dname))
+        demail = cursor.fetchall()
+        docemail = demail[0][0]
+        msg = Message(
+            'Booking Conformation',
+            sender='Onehealth',
+            recipients=[uemail]
+        )
+        # msg.body = "Password : '{}'".format(password[0])
+        msg.html = render_template('bookrecipt.html', orderid=payid, dname=dname,
+                                   demail=docemail, spec=spec, date=date, time=time, fee=fee)
+        mail.send(msg)
+
+    if 'user_name' in session:
+        return render_template('paymentsuccess.html', name=session['user_name'])
+    else:
+        return redirect('/adminLogin')
+
+
+@app.route("/testm")
+def testt():
+    return render_template('bookrecipt.html')
 
 
 def updateDocTbl(dname):
@@ -425,6 +533,51 @@ def appcancel(id, user, doctor):
     else:
         flash(f"Server Error", "danger")
         return redirect("/apphistory/{}".format(user))
+
+# doctor..........
+
+
+@ app.route('/doctorhome/<string:doctor>')
+def doctordash(doctor):
+    if 'user_name' in session:
+        today = date.today()
+        d1 = today.strftime("%d-%m-%Y")
+        print(d1)
+        cursor.execute(
+            """SELECT * FROM `appointment_tbl` WHERE `doctor_name` LIKE '{}' AND `date` LIKE '{}' AND `deleted_by` LIKE '{}'""".format(doctor, d1, '-'))
+        today = cursor.fetchall()
+        todayC = len(today)
+
+        cursor.execute(
+            """SELECT * FROM `appointment_tbl` WHERE `doctor_name` LIKE '{}' AND `date` NOT LIKE '{}' AND `deleted_by` LIKE '{}'""".format(doctor, d1, '-'))
+        future = cursor.fetchall()
+        futureC = len(future)
+        return render_template('doctorDashBoard.html', name=session['user_name'], todayC=todayC, futureC=futureC)
+    else:
+        return redirect('/doctorLogin')
+
+
+@ app.route('/validateDoctor_login', methods=['POST'])
+def validateDoctorLogin():
+    if recaptcha.verify():
+        email = request.form.get('txtmail')
+        password = request.form.get('txtpass')
+
+        cursor.execute(
+            """SELECT * FROM `doctor_tbl` WHERE `email` LIKE '{}' AND `password` LIKE '{}'""".format(email, password))
+        user = cursor.fetchall()
+
+        if len(user) > 0:
+            session['user_name'] = user[0][1]
+            return redirect('/doctorhome/{}'.format(user[0][1]))
+        else:
+            flash(f"Invalid user credentials", "error")
+            return redirect('/doctorLogin')
+
+        return "{}{}".format(email, password)
+    else:
+        message = "Please fill out the ReCaptcha!"
+        return render_template('doctor_login.html', message=message)
 
 
 @ app.route('/forgot_Password')

@@ -23,6 +23,13 @@
     />
     <title>User</title>
     <style>
+      .containthold {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding-top: 5rem;
+      }
       .actoptionhold {
         border-left: 4px solid deepskyblue;
       }
@@ -91,6 +98,39 @@
         color: black;
         margin-right: 25px;
       }
+      input[type="number"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize: vertical;
+      }
+
+      input[type="submit"] {
+        background-color: #0457aa;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #217fde;
+      }
+      form {
+        width: 55rem;
+      }
+      h3 {
+        color: #0457aa;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+      }
     </style>
   </head>
   <body>
@@ -113,25 +153,29 @@
         <div class="bodyhold">
           <div class="sidebar">
             <div class="sidehold">
-              <div class="optionhold actoptionhold">
-                <div class="icon acticon">
-                  <i class="fa-solid fa-house-user acti"></i>
+              <div class="optionhold">
+                <div class="icon">
+                  <i class="fa-solid fa-house-user"></i>
                 </div>
-                <p class="option actoption">
+                <p class="option">
                   <a href="/user/{{ name }}">Home</a>
                 </p>
               </div>
 
               <div class="optionhold">
-                <div class="icon"><i class="fa-solid fa-disease"></i></div>
+                <div class="icon">
+                  <i class="fa-solid fa-disease"></i>
+                </div>
                 <p class="option">
                   <a href="/diabetesform">Diabetes</a>
                 </p>
               </div>
 
-              <div class="optionhold">
-                <div class="icon"><i class="fa-solid fa-heart-pulse"></i></div>
-                <p class="option">
+              <div class="optionhold actoptionhold">
+                <div class="icon acticon">
+                  <i class="fa-solid fa-heart-pulse acti"></i>
+                </div>
+                <p class="option actoption">
                   <a href="/heartform">Heart Disease</a>
                 </p>
               </div>
@@ -163,20 +207,66 @@
             </div>
           </div>
           <div class="containthold">
-            <div class="card">
-              <div class="boxhold" id="c1">
-                <div class="head">Active Appointment</div>
-                <div class="count">{{ activeC }}</div>
-              </div>
-              <div class="boxhold" id="c2">
-                <div class="head">Canceled Appointment</div>
-                <div class="count">{{ canceledC }}</div>
-              </div>
-              <div class="boxhold" id="c3">
-                <div class="head">Total Appointments</div>
-                <div class="count">{{activeC+canceledC}}</div>
-              </div>
-            </div>
+            <h3>Know your chances of getting Heart disease</h3>
+            <form action="/heartpredict" method="post">
+              <label for="fname">Chest Pain Type</label>
+              <select name="selpain" id="">
+                <option value="1">Typical Angina</option>
+                <option value="2">Atypical Angina</option>
+                <option value="3">Non-Anginal Pain</option>
+                <option value="4">Asymptomatic</option>
+              </select>
+
+              <label for="lname">Resting Blood Pressure (in mm Hg)</label>
+              <input
+                type="number"
+                id="lname"
+                name="numgluco"
+                placeholder="Resting Blood Pressure (in mm Hg)"
+                required
+              />
+
+              <label for="lname">Serum Cholestoral in mg/dl</label>
+              <input
+                type="number"
+                id="lname"
+                name="numbp"
+                placeholder="Serum Cholestoral in mg/dl"
+                required
+              />
+
+              <label for="country">Fasting Blood Sugar</label>
+              <select name="fbs" id="">
+                <option value="0">Fasting Blood Sugar < 120 mg/dl</option>
+                <option value="1">Fasting Blood Sugar > 120 mg/dl</option>
+              </select>
+
+              <label for="lname">Resting Electro-cardiographic</label>
+              <select name="res" id="">
+                <option value="0">Normal</option>
+                <option value="1">having ST-T wave abnormality</option>
+                <option value="2">
+                  showing probable or definite left ventricular hypertrophy
+                </option>
+              </select>
+
+              <label for="subject">Maximum Heart Rate Achieved</label>
+              <input
+                type="number"
+                id="lname"
+                name="numage"
+                placeholder="Maximum Heart Rate Achieved"
+                required
+              />
+
+              <label for="lname">Exercise Induced Angina</label>
+              <select name="exe" id="">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+
+              <input type="submit" value="Predict" />
+            </form>
           </div>
         </div>
       </div>

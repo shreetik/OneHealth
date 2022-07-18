@@ -16,29 +16,10 @@
 
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      href="{{ url_for('static',filename='CSS/admin_dash_style.css') }}"
     />
-    <title>User</title>
+
     <style>
-      .actoptionhold {
-        border-left: 4px solid deepskyblue;
-      }
-      .actoption {
-        background-color: white;
-        color: #4862c3;
-      }
-
-      .acticon {
-        background-color: white;
-        color: #4862c3;
-      }
-
-      .acti {
-        color: #4862c3;
-      }
       .containthold {
         display: flex;
         align-items: center;
@@ -85,6 +66,23 @@
         background-color: #f96d6c;
         border-left: 4px solid #b34b4b;
       }
+
+      .actoptionhold {
+        border-left: 4px solid deepskyblue;
+      }
+      .actoption {
+        background-color: white;
+        color: #4862c3;
+      }
+
+      .acticon {
+        background-color: white;
+        color: #4862c3;
+      }
+
+      .acti {
+        color: #4862c3;
+      }
       .icouser {
         height: 10px;
         width: 10px;
@@ -92,6 +90,15 @@
         margin-right: 25px;
       }
     </style>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Doctor</title>
   </head>
   <body>
     <div class="container">
@@ -118,63 +125,47 @@
                   <i class="fa-solid fa-house-user acti"></i>
                 </div>
                 <p class="option actoption">
-                  <a href="/user/{{ name }}">Home</a>
+                  <a href="/doctorhome/{{ name }}">Home</a>
                 </p>
               </div>
 
               <div class="optionhold">
                 <div class="icon"><i class="fa-solid fa-disease"></i></div>
                 <p class="option">
-                  <a href="/diabetesform">Diabetes</a>
+                  <a href="#">Today's Appointments</a>
                 </p>
               </div>
 
               <div class="optionhold">
                 <div class="icon"><i class="fa-solid fa-heart-pulse"></i></div>
-                <p class="option">
-                  <a href="/heartform">Heart Disease</a>
-                </p>
+                <div class="option">
+                  <a href="#">Future Appointments</a>
+                </div>
               </div>
 
               <div class="optionhold">
                 <div class="icon">
-                  <i class="fa-solid fa-house-user"></i>
+                  <i class="fa-solid fa-calendar-check"></i>
                 </div>
-                <p class="option">
-                  <a href="/app_booking">Appointment Booking</a>
-                </p>
-              </div>
-
-              <div class="optionhold">
-                <div class="icon"><i class="fa-solid fa-house-user"></i></div>
-                <p class="option">
-                  <a href="/apphistory/{{ name }}">Active Appointments</a>
-                </p>
-              </div>
-
-              <div class="optionhold">
-                <div class="icon"><i class="fa-solid fa-house-user"></i></div>
-                <p class="option">
-                  <a href="/apphistorycanceled/{{ name }}"
-                    >Appointment History</a
-                  >
-                </p>
+                <div class="option">
+                  <a href="#">cancelled Appointments</a>
+                </div>
               </div>
             </div>
           </div>
           <div class="containthold">
             <div class="card">
               <div class="boxhold" id="c1">
-                <div class="head">Active Appointment</div>
-                <div class="count">{{ activeC }}</div>
+                <div class="head">Today's Appointments</div>
+                <div class="count">{{ todayC }}</div>
               </div>
               <div class="boxhold" id="c2">
-                <div class="head">Canceled Appointment</div>
-                <div class="count">{{ canceledC }}</div>
+                <div class="head">Future Appointments</div>
+                <div class="count">{{ futureC }}</div>
               </div>
               <div class="boxhold" id="c3">
                 <div class="head">Total Appointments</div>
-                <div class="count">{{activeC+canceledC}}</div>
+                <div class="count">{{ futureC + todayC }}</div>
               </div>
             </div>
           </div>

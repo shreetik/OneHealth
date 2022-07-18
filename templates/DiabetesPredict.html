@@ -23,6 +23,13 @@
     />
     <title>User</title>
     <style>
+      .containthold {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding-top: 6rem;
+      }
       .actoptionhold {
         border-left: 4px solid deepskyblue;
       }
@@ -91,6 +98,39 @@
         color: black;
         margin-right: 25px;
       }
+      input[type="number"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize: vertical;
+      }
+
+      input[type="submit"] {
+        background-color: #0457aa;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #217fde;
+      }
+      form {
+        width: 55rem;
+      }
+      h3 {
+        color: #0457aa;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+      }
     </style>
   </head>
   <body>
@@ -113,18 +153,20 @@
         <div class="bodyhold">
           <div class="sidebar">
             <div class="sidehold">
-              <div class="optionhold actoptionhold">
-                <div class="icon acticon">
-                  <i class="fa-solid fa-house-user acti"></i>
+              <div class="optionhold">
+                <div class="icon">
+                  <i class="fa-solid fa-house-user"></i>
                 </div>
-                <p class="option actoption">
+                <p class="option">
                   <a href="/user/{{ name }}">Home</a>
                 </p>
               </div>
 
-              <div class="optionhold">
-                <div class="icon"><i class="fa-solid fa-disease"></i></div>
-                <p class="option">
+              <div class="optionhold actoptionhold">
+                <div class="icon acticon">
+                  <i class="fa-solid fa-disease acti"></i>
+                </div>
+                <p class="option actoption">
                   <a href="/diabetesform">Diabetes</a>
                 </p>
               </div>
@@ -163,20 +205,62 @@
             </div>
           </div>
           <div class="containthold">
-            <div class="card">
-              <div class="boxhold" id="c1">
-                <div class="head">Active Appointment</div>
-                <div class="count">{{ activeC }}</div>
-              </div>
-              <div class="boxhold" id="c2">
-                <div class="head">Canceled Appointment</div>
-                <div class="count">{{ canceledC }}</div>
-              </div>
-              <div class="boxhold" id="c3">
-                <div class="head">Total Appointments</div>
-                <div class="count">{{activeC+canceledC}}</div>
-              </div>
-            </div>
+            <h3>Know your chances of getting diabetes</h3>
+            <form action="/dia_predict" method="post">
+              <label for="fname">No. of Pregnencies</label>
+              <input
+                type="number"
+                id="fname"
+                name="nop"
+                placeholder="No. of Pregnencies"
+                required
+              />
+
+              <label for="lname">Glucose Level</label>
+              <input
+                type="number"
+                id="lname"
+                name="numgluco"
+                placeholder="Glucose Level"
+                required
+              />
+
+              <label for="lname">Current Blood Pressure</label>
+              <input
+                type="number"
+                id="lname"
+                name="numbp"
+                placeholder="Current Blood Pressure"
+                required
+              />
+
+              <label for="country">Body Mass Index</label>
+              <input
+                type="number"
+                id="lname"
+                name="numbmi"
+                placeholder="Body Mass Index"
+              />
+
+              <label for="lname">Diabetes Pedigree Function</label>
+              <input
+                type="number"
+                id="lname"
+                name="numdpf"
+                placeholder="Diabetes Pedigree Function"
+              />
+
+              <label for="subject">Age</label>
+              <input
+                type="number"
+                id="lname"
+                name="numage"
+                placeholder="Age"
+                required
+              />
+
+              <input type="submit" value="Predict" />
+            </form>
           </div>
         </div>
       </div>

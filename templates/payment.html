@@ -374,12 +374,16 @@
 
               <div class="optionhold">
                 <div class="icon"><i class="fa-solid fa-disease"></i></div>
-                <div class="option">Diabetes</div>
+                <p class="option">
+                  <a href="/diabetesform">Diabetes</a>
+                </p>
               </div>
 
               <div class="optionhold">
                 <div class="icon"><i class="fa-solid fa-heart-pulse"></i></div>
-                <div class="option">Heart Disease</div>
+                <p class="option">
+                  <a href="/heartform">Heart Disease</a>
+                </p>
               </div>
 
               <div class="optionhold actoptionhold">
@@ -438,7 +442,10 @@
               </div>
               <div class="jk">
                 <div class="hh">
-                  <form action="/paymentsuccess">
+                  <form
+                    action="/paymentsuccess/{{user}}/{{dname}}/{{spec}}/{{date}}/{{time}}/{{fee}}/{{payment['id']}}"
+                    method="post"
+                  >
                     <script
                       src="https://checkout.razorpay.com/v1/checkout.js"
                       data-key="rzp_test_fWhGQ0AQG7bRKg"
