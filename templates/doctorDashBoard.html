@@ -132,17 +132,17 @@
               <div class="optionhold">
                 <div class="icon"><i class="fa-solid fa-disease"></i></div>
                 <p class="option">
-                  <a href="#">Today's Appointments</a>
+                  <a href="/todayapp/{{ name }}">Today's Appointments</a>
                 </p>
               </div>
 
               <div class="optionhold">
                 <div class="icon"><i class="fa-solid fa-heart-pulse"></i></div>
                 <div class="option">
-                  <a href="#">Future Appointments</a>
+                  <a href="/futureapp/{{ name }}">Future Appointments</a>
                 </div>
               </div>
-
+              <!-- 
               <div class="optionhold">
                 <div class="icon">
                   <i class="fa-solid fa-calendar-check"></i>
@@ -150,7 +150,7 @@
                 <div class="option">
                   <a href="#">cancelled Appointments</a>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="containthold">
@@ -170,6 +170,27 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div>
+        <!-- Begin alerts -->
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <script>
+          Swal.fire({
+            title: "{{ category.title() }}!",
+            // success , error , warning ,info
+
+            text: "{{ message }}",
+            // Custom message flashed from your flask routes
+
+            icon: "{{ category }}" == "danger" ? "error" : "{{ category }}",
+            // success , error , warning ,info
+          });
+        </script>
+        {% endfor %} {% endif %} {% endwith %}
+
+        <!-- End alerts -->
       </div>
     </div>
   </body>

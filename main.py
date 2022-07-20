@@ -557,6 +557,93 @@ def doctordash(doctor):
         return redirect('/doctorLogin')
 
 
+@ app.route('/futureapp/<string:doctor>')
+def futureap(doctor):
+    if 'user_name' in session:
+        today = date.today()
+        d1 = today.strftime("%d-%m-%Y")
+        print(d1)
+
+        cursor.execute(
+            """SELECT * FROM `appointment_tbl` WHERE `doctor_name` LIKE '{}' AND `date` NOT LIKE '{}' AND `deleted_by` LIKE '{}'""".format(doctor, d1, '-'))
+        futureapp = cursor.fetchall()
+        return render_template('futureappdoc.html', name=session['user_name'], futureapp=futureapp)
+    else:
+        return redirect('/doctorLogin')
+
+
+@ app.route('/todayapp/<string:doctor>')
+def todayap(doctor):
+    if 'user_name' in session:
+        today = date.today()
+        d1 = today.strftime("%d-%m-%Y")
+        print(d1)
+
+        cursor.execute(
+            """SELECT * FROM `appointment_tbl` WHERE `doctor_name` LIKE '{}' AND `date` LIKE '{}' AND `deleted_by` LIKE '{}'""".format(doctor, d1, '-'))
+        futureapp = cursor.fetchall()
+        return render_template('todayappdoc.html', name=session['user_name'], futureapp=futureapp)
+    else:
+        return redirect('/doctorLogin')
+
+
+@ app.route('/cancelbydoctor/<string:user>/<string:date>/<string:time>')
+def canbydoc(user, date, time):
+    if 'user_name' in session:
+        cursor.execute(
+            """SELECT * FROM `user` WHERE `user_name` LIKE '{}' """.format(user))
+        userinfo = cursor.fetchall()
+        return render_template('cancelbydoc.html', name=session['user_name'], date=date, time=time, user=user, userinfo=userinfo)
+    else:
+        return redirect('/doctorLogin')
+
+
+@app.route("/sendcancelmail/<string:doctor>/<string:usern>/<string:date>", methods=['POST'])
+def canmail(doctor, usern, date):
+    print(usern)
+    print(doctor)
+    print(date)
+    reason = request.form.get('txtarea')
+    print(reason)
+    cursor.execute(
+        """SELECT * FROM `user` WHERE `full_name` LIKE '{}'""".format(usern))
+    emailc = cursor.fetchall()
+    cursor.execute(
+        """UPDATE `appointment_tbl` SET `deleted_by`='{}',`status`='{}' WHERE `patient_name`='{}' AND `doctor_name`='{}' AND `date`='{}' """.format('Doctor', 'CANCELED', emailc[0][2], doctor, date))
+    conn.commit()
+    if cursor.rowcount == 1:
+        print(emailc)
+        msg = Message(
+            'Your Appointment is cancelled by doctor',
+            sender='Onehealth',
+            recipients=[emailc[0][3]]
+        )
+    # msg.body = "Password : '{}'".format(password[0])
+        msg.html = "<h3>From '{}'</h3> <br> <h4>'{}'</h4>".format(
+            doctor, reason)
+        mail.send(msg)
+
+        flash(f"Appointment has been cancelled!", "success")
+        return redirect("/todayapp/{}".format(doctor))
+    else:
+        flash(f"Server Error", "error")
+        return redirect("/todayapp/{}".format(doctor))
+
+
+@ app.route('/perceptionbydoctor/<string:user>/<string:date>/<string:time>//<string:dname>')
+def percdoc(user, date, time, dname):
+    if 'user_name' in session:
+        cursor.execute(
+            """SELECT * FROM `user` WHERE `user_name` LIKE '{}' """.format(user))
+        userinfo = cursor.fetchall()
+        cursor.execute(
+            """SELECT * FROM `doctor_tbl` WHERE `doctor_name` LIKE '{}' """.format(dname))
+        doctorinfo = cursor.fetchall()
+        return render_template('perception.html', name=session['user_name'], date=date, time=time, userinfo=userinfo, doctorinfo=doctorinfo)
+    else:
+        return redirect('/doctorLogin')
+
+
 @ app.route('/validateDoctor_login', methods=['POST'])
 def validateDoctorLogin():
     if recaptcha.verify():
